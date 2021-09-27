@@ -50,9 +50,9 @@ io.on("connection", (socket) => {
         console.log("user disconnected");
 
         // removendo do array o peer desconectado
-        const newConnectedPeers = connectedPeers.filter((peerSocketId) => {
-            peerSocketId !== socket.id;
-        });
+        const newConnectedPeers = connectedPeers.filter(
+            (peerSocketId) => peerSocketId !== socket.id
+        );
         connectedPeers = newConnectedPeers;
         console.log(connectedPeers);
     });
