@@ -25,15 +25,23 @@ export const registerSocketEvents = (socket) => {
         webRTCHandler.handlePreOffer(data);
     });
 
+    // recebendo a resposta
     socket.on('pre-offer-answer', (data) => {
         webRTCHandler.handlePreOfferAnswer(data);
     });
 
+    // recebendo o sinal de dados rtc
     socket.on('webRTC-signaling', (data) => {
         switch (data.type) {
             case constants.webRTCSignaling.OFFER:
                 webRTCHandler.handleWebRTCOffer(data);
-            break;
+                break;
+            case constants.webRTCSignaling.ANSWER:
+                webRTCHandler.handleWebRTCAnswer(data);
+                break;
+            case constants.webRTCSignaling.ICE_CANDIDATE:
+                webRTCHandler.handleWebRTCCandidate(data);
+                break;
             default:
                 return;
 

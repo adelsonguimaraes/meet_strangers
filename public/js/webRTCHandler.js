@@ -41,6 +41,11 @@ const createPeerConnection = () => {
         console.log('geeting ice candidates from stun server');
         if (event.candidate) {
             // send our ice candidates to other peer
+            wss.sendDataUsingWebRTCSignaling({
+                connectedUserSocketId: connectedUserDetails.socketId,
+                type: constants.webRTCSignaling.ICE_CANDIDATE,
+                candidate: event.candidate
+            });
         }
     }
 
@@ -173,6 +178,7 @@ export const handlePreOfferAnswer = (data) => {
 const sendWebRTCOffer = async () => {
     const offer = await peerConnection.createOffer();
     await peerConnection.setLocalDescription(offer);
+    
     wss.sendDataUsingWebRTCSignaling({
         connectedUserSocketId: connectedUserDetails.socketId,
         type: constants.webRTCSignaling.OFFER,
@@ -182,7 +188,32 @@ const sendWebRTCOffer = async () => {
 
 
 // evento quando aceita a chamada, do lado de quem recebe
-export const handleWebRTCOffer = (data) => {
-    console.log('webRTC offer came');
-    console.log(data);
+export const handleWebRTCOffer = async (data) => {
+    await peerConnection.setRemoteDescription(data.offer);
+    const answer = await peerConnection.createAnswer();
+    await peerConnection.setLocalDescription(answer);
+
+    wss.sendDataUsingWebRTCSignaling({
+        connectedUserSocketId: connectedUserDetails.socketId,
+        type: constants.webRTCSignaling.ANSWER,
+        answer: answer
+    });
+};
+
+// evento de quando aceita chamada do lado de quem chama
+export const handleWebRTCAnswer = async (data) => {
+    console.log('handling webRTC Answer');
+    await peerConnection.setRemoteDescription(data.answer);
+};
+
+export const handleWebRTCCandidate = async (data) => {
+    console.log('handling incoming webRTC candidates');
+    try {
+        await peerConnection.addIceCandidate(data.candidate);
+    }catch (err) {
+        console.error(
+            'error occured when trying to add received ice candidate',
+            err
+        );
+    }
 };
