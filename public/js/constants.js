@@ -13,3 +13,11 @@ export const preOfferAnswer = {
     CALL_REJECTED: 'CALL_REJECTED',
     CALL_UNAVAILABLE: 'CALL_UNAVAILABLE'
 };
+
+
+// constantes com tipo de sinal webrtc
+export const webRTCSignaling = {
+    OFFER: 'OFFER',
+    ANSWER: 'ANSWER',
+    ICE_CANDIDATE: 'ICE_CANDIDATE'
+};

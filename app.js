@@ -69,6 +69,23 @@ io.on("connection", (socket) => {
         }
     });
 
+    // recebendo emissão de sinal webrtc
+    socket.on('webRTC-signaling', (data) => {
+        const { connectedUserSocketId } = data;
+
+        // consultando o socketid entre os conectados
+        // de quem deve receber o data
+        const connectedPeer = connectedPeers.find(
+            (peerSocketId) => peerSocketId === connectedUserSocketId
+        );
+
+        if (connectedPeer) {
+            // se o peer estiver entre os conectados, emitimos
+            // o sinal com os dados webrtc e informações de data
+            io.to(connectedUserSocketId).emit('webRTC-signaling', data);
+        }
+    });
+
     // pegando o evento de desconexão
     socket.on("disconnect", () => {
         console.log("user disconnected");

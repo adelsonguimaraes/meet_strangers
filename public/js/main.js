@@ -7,6 +7,8 @@ const socket = io("/");
 // resgistrando o socket
 wss.registerSocketEvents(socket);
 
+webRTCHandler.getLocalPreview();
+
 // função para copiar o código de socket quando clicar no botão de copia
 const personalCodeCopyButton = document.getElementById('personal_code_copy_button');
 personalCodeCopyButton.addEventListener('click', () => {
