@@ -23,10 +23,19 @@ export const registerSocketEvents = (socket) => {
     socket.on("pre-offer", (data) => {
         webRTCHandler.handlePreOffer(data);
     });
+
+    socket.on('pre-offer-answer', (data) => {
+        webRTCHandler.handlePreOfferAnswer(data);
+    });
 }
 
 export const sendPreOffer = (data) => {
     console.log("emmiting to server pre offer event");
     // emitindo sinal de pre oferta
     socketIO.emit("pre-offer", data);
+};
+
+export const sendPreOfferAnswer = (data) => {
+    // emitindo resposta ao sinal de oferta
+    socketIO.emit('pre-offer-answer', data);
 };

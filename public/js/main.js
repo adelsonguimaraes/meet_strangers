@@ -16,9 +16,9 @@ personalCodeCopyButton.addEventListener('click', () => {
 
 // função dos botões de conexão
 const personalCodeChatButton = document.getElementById("personal_code_chat_button");
-
 const personalCodeVideoButton = document.getElementById("personal_code_video_button");
 
+// função de chamada via chat
 personalCodeChatButton.addEventListener('click', () => {
     console.log('chat button clicked');
 
@@ -28,6 +28,7 @@ personalCodeChatButton.addEventListener('click', () => {
     webRTCHandler.sendPreOffer(callType, calledPersonalCode);
 });
 
+// função de chamada vida video
 personalCodeVideoButton.addEventListener('click', () => {
     console.log('video button clicked');
     
