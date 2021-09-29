@@ -18,8 +18,16 @@ export const updateLocalVideo = (stream) => {
     });
 };
 
+export const showVideoCallButtons = () => {
+    const personalCodeVideoButton = document.getElementById('personal_code_video_button');
+    const strangerVideoButton = document.getElementById('stranger_video_button');
+
+    showElement(personalCodeVideoButton);
+    showElement(strangerVideoButton);
+};
+
 // pegando o elemento de video remoto e atualziando
-export const uppdateRemoteVideo = (stream) => {
+export const updateRemoteVideo = (stream) => {
     const remoteVideo = document.getElementById('remote_video');
     remoteVideo.srcObject = stream;
 };
@@ -221,6 +229,39 @@ export const switchRecordingButtons = (switchForResumeButton = false) => {
         hideElement(resumeButton);
         showElement(pauseButton);
     }
+};
+
+// ui after hanged up
+export const updateUIAfterHangUp = (callType) => {
+    enableDashboard();
+
+    // hide the call buttons
+    if (
+        callType === constants.callType.VIDEO_PERSONAL_CODE ||
+        callType === constants.callType.VIDEO_STRANGER
+    ){
+        const callButtons = document.getElementById('call_buttons');
+        hideElement(callButtons);
+    }else{
+        const chatCallButtons = document.getElementById('finish_chat_button_container');
+        hideElement(chatCallButtons);
+    }
+
+    const newMessageInput = document.getElementById('new_message');
+    hideElement(newMessageInput);
+    clearMessenger();
+
+    updateMicButton(false);
+    updateCameraButton(false);
+
+    // hide remote video and show placeholder
+    const remoteVideo = document.getElementById('remote_video');
+    hideElement(remoteVideo);
+
+    const placeHolder = document.getElementById('video_placeholder');
+    showElement(placeHolder);
+
+    removeAllDialogs();
 };
 
 // ui helper functions

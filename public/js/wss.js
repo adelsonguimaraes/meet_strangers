@@ -33,7 +33,6 @@ export const registerSocketEvents = (socket) => {
     // recebendo sinal de desligamento da chamada
     socket.on('user-hanged-up', () => {
         // chamando desligamento
-        console.log('recebendo sinal de desligamento');
         webRTCHandler.handleConnectedUserHangedUp();
     });
 
