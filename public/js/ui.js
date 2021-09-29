@@ -190,6 +190,38 @@ export const clearMessenger = () => {
     messagesContainer.querySelectorAll('*').forEach((n) => n.remove());
 };
 
+// recording
+export const showRecordingPanel = () => {
+    const recordingButtons = document.getElementById('video_recording_buttons');
+    showElement(recordingButtons);
+
+    // ocultando o butão de start recording se gravação ativa
+    const startRecordingButton = document.getElementById('start_recording_button');
+    hideElement(startRecordingButton);
+}
+
+// escontendo controle de gravação e exibindo botão de start
+export const resetRecordingButtons = () => {
+    const stratRecordingButton = document.getElementById('start_recording_button');
+    const recordingButtons = document.getElementById('video_recording_buttons');
+    
+    hideElement(recordingButtons);
+    showElement(stratRecordingButton);
+};
+
+// alternando botão de pausa e resumo de acordo com botão ativo
+export const switchRecordingButtons = (switchForResumeButton = false) => {
+    const resumeButton = document.getElementById('resume_recording_button');
+    const pauseButton = document.getElementById('pause_recording_button');
+
+    if (switchForResumeButton) {
+        hideElement(pauseButton);
+        showElement(resumeButton);
+    } else {
+        hideElement(resumeButton);
+        showElement(pauseButton);
+    }
+};
 
 // ui helper functions
 

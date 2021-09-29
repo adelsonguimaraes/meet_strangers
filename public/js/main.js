@@ -3,6 +3,7 @@ import * as wss from './wss.js';
 import * as webRTCHandler from './webRTCHandler.js';
 import * as constants from './constants.js';
 import * as ui from './ui.js';
+import * as recordingUtils from './recordingUtills.js';
 
 const socket = io("/");
 // resgistrando o socket
@@ -97,4 +98,42 @@ sendMessageButton.addEventListener('click', () => {
     ui.appendMessage(message, true);
     // limpando a caixa de texto
     newMessageInput.value = '';
+});
+
+// recording
+
+// pegando o botão de start da gravação e escutando o evento click
+const startRecordingButton = document.getElementById('start_recording_button');
+startRecordingButton.addEventListener('click', () => {
+    // iniciando a gravação do video
+    recordingUtils.startRecording();
+    // exibindo controle de gravação de vídeo
+    ui.showRecordingPanel();
+});
+
+// pegando o botão de stop de gravação e escutando e evento click
+const stopRecordingButton = document.getElementById('stop_recording_button');
+stopRecordingButton.addEventListener('click', () => {
+    // parando a gravação de video
+    recordingUtils.stopRecording();
+    // removendo botões de controle de gravação
+    ui.resetRecordingButtons();
+});
+
+// pegando botão de pausa de gravação e escutando evento de click
+const pauseRecordingButton = document.getElementById('pause_recording_button');
+pauseRecordingButton.addEventListener('click', () => {
+    // pausando a gravação de video
+    recordingUtils.pauseRecording();
+    // exibindo botão de play/resumo
+    ui.switchRecordingButtons(true);
+});
+
+// pegando botão de resumir gravacao e escutando evento click
+const resumeRecordingButton = document.getElementById('resume_recording_button');
+resumeRecordingButton.addEventListener('click', () => {
+    // continuando com a gravacao de video
+    recordingUtils.resumeRecording();
+    // exibindo botão de pausa
+    ui.switchRecordingButtons();
 });
