@@ -37,19 +37,25 @@ export const getLocalPreview = () => {
 const createPeerConnection = () => {
     peerConnection = new RTCPeerConnection(configuration);
 
+    // criando uma canal de dados
     dataChannel = peerConnection.createDataChannel('chat');
 
+    // escutando eventos do canal de dados
     peerConnection.ondatachannel = (event) => {
         const dataChannel = event.channel;
 
+        // evento quando o canal de dados é aberto
         dataChannel.onopen = () => {
             console.log('peer connection is ready to receive data channel messages');
         };
 
+        // evento quando o canal de dados recebe uma mensagem
+        // acontece do lado de quem recebe
         dataChannel.onmessage = (event) => {
             console.log('message came from data channel');
             const message = JSON.parse(event.data);
-            console.log(message);
+            // adiciona mensagem no chat quando receber
+            ui.appendMessage(message);
         };
     };
 

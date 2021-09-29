@@ -69,20 +69,32 @@ switchForScreenSharingButton.addEventListener('click', () => {
 
 // messenger
 
+// pegando eventos de digitação na caixa de texto de mensagem
 const newMessageInput = document.getElementById('new_message_input');
 newMessageInput.addEventListener('keydown', (event) => {
     console.log('change ocurred');
     const key = event.key;
 
+    // quando a tecla pressionanda na caixa de menssagem for enter
     if (key === "Enter") {
+        // envia a mensagem para o canal de dados
         webRTCHandler.sendMessageUsingDataChannel(event.target.value);
+        // envia a mensagem para ser escrita na tela
+        ui.appendMessage(event.target.value, true);
+        // limpa a caixa de texto
         newMessageInput.value = '';
     }
 });
 
+// quando o botão de enviar mensagem for cliclado
 const sendMessageButton = document.getElementById('send_message_button');
 sendMessageButton.addEventListener('click', () => {
+    // pegando a mensagem da caixa de texto
     const message = newMessageInput.value;
+    // enviando a mensagem para o canal de dados
     webRTCHandler.sendMessageUsingDataChannel(message);
+    // envia a mensagem para ser escrita na tela
+    ui.appendMessage(message, true);
+    // limpando a caixa de texto
     newMessageInput.value = '';
 });
