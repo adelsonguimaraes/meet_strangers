@@ -126,6 +126,7 @@ pauseRecordingButton.addEventListener('click', () => {
     // pausando a gravação de video
     recordingUtils.pauseRecording();
     // exibindo botão de play/resumo
+
     ui.switchRecordingButtons(true);
 });
 
@@ -136,4 +137,16 @@ resumeRecordingButton.addEventListener('click', () => {
     recordingUtils.resumeRecording();
     // exibindo botão de pausa
     ui.switchRecordingButtons();
+});
+
+// hang up - evento de click para desligar a chamada
+
+const hangUpButton = document.getElementById('hang_up_button');
+hangUpButton.addEventListener('click', () => {
+    webRTCHandler.handleHangUp();
+});
+
+const hangUpChatButton = document.getElementById('finish_chat_call_button');
+hangUpChatButton.addEventListener('click', () => {
+    webRTCHandler.handleHangUp();
 });

@@ -86,6 +86,22 @@ io.on("connection", (socket) => {
         }
     });
 
+    // recebendo sinal de desligamento da chamada
+    socket.on('user-hanged-up', (data) => {
+        // desestruturando o connectedSocketId
+        const { connectedUserSocketId } = data;
+
+        // verificando se está entre os conectados
+        const connectedPeer = connectedPeers.find(
+            (peerSocketId) => peerSocketId === connectedUserSocketId
+        );
+
+        if (connectedPeer) {
+            // se estiver entre os conectados emit um sinal
+            io.to(connectedUserSocketId).emit('user-hanged-up');
+        }
+    });
+
     // pegando o evento de desconexão
     socket.on("disconnect", () => {
         console.log("user disconnected");

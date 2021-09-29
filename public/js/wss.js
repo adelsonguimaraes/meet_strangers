@@ -30,6 +30,13 @@ export const registerSocketEvents = (socket) => {
         webRTCHandler.handlePreOfferAnswer(data);
     });
 
+    // recebendo sinal de desligamento da chamada
+    socket.on('user-hanged-up', () => {
+        // chamando desligamento
+        console.log('recebendo sinal de desligamento');
+        webRTCHandler.handleConnectedUserHangedUp();
+    });
+
     // recebendo o sinal de dados rtc
     socket.on('webRTC-signaling', (data) => {
         switch (data.type) {
@@ -62,4 +69,8 @@ export const sendPreOfferAnswer = (data) => {
 
 export const sendDataUsingWebRTCSignaling = (data) => {
     socketIO.emit('webRTC-signaling', data);
+};
+
+export const sendUserHangedUp = (data) => {
+    socketIO.emit('user-hanged-up', data);
 };

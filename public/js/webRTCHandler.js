@@ -303,3 +303,19 @@ export const switchBetweenCameraAndScreenSharing = async (screenSharingActive) =
         }
     }
 };
+
+// hang up
+
+export const handleHangUp = () => {
+    console.log('finishing the call');
+    const data = {
+        connectedUserSocketId: connectedUserDetails.socketId
+    };
+
+    wss.sendUserHangedUp(data);
+};
+
+// evento quando o parceiro desligar a chamada
+export const handleConnectedUserHangedUp = () => {
+    console.log('connected peer hanged up');
+}
