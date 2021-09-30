@@ -72,6 +72,25 @@ export const showCallingDialog = (rejectCallHandler) => {
     dialog.appendChild(callingDialog);
 };
 
+// mosta caixa de dialogo parquem quem faz a chamada
+// informando que não há nenhum estranho para receber
+export const showNoStrangerAvailableDialog = () => {
+    const infoDialog = elements.getInfoDialog(
+        'No Stranger available',
+        'Plese try again later'
+    );
+
+    if (infoDialog) {
+        const dialog = document.getElementById('dialog');
+        dialog.appendChild(infoDialog);
+    }
+
+    // removendo a caixa de dialogo depois de 4 segundos
+    setTimeout(() => {
+        removeAllDialogs();
+    }, [4000]);
+};
+
 // mosta o dialogo de acordo com a resposta
 export const showInfoDialog = (preOfferAnswer) => {
     let infoDialog = null;
@@ -127,11 +146,11 @@ export const removeAllDialogs = () => {
 };
 
 export const showCallElements = (callType) => {
-    if (callType === constants.callType.CHAT_PERSONAL_CCODE) {
+    if (callType === constants.callType.CHAT_PERSONAL_CCODE || callType === constants.callType.CHAT_STRANGER) {
         showChatCallElements();
     }
 
-    if (callType === constants.callType.VIDEO_PERSONAL_CODE) {
+    if (callType === constants.callType.VIDEO_PERSONAL_CODE || callType === constants.callType.VIDEO_STRANGER) {
         showVideoCallElements();
     }
 };
