@@ -110,6 +110,12 @@ export const getCallingDialog = (rejectCallHandler) => {
     dialogContent.appendChild(imageContainer);
     dialogContent.appendChild(buttonContainer);
 
+    // escutando o evento de click no botão de rejeitar chamada
+    // na tela de quem chama
+    hangUpCallButton.addEventListener('click', () => {
+        rejectCallHandler();
+    });
+
     return dialog;
 };
 

@@ -4,6 +4,7 @@ import * as webRTCHandler from './webRTCHandler.js';
 import * as constants from './constants.js';
 import * as ui from './ui.js';
 import * as recordingUtils from './recordingUtills.js';
+import * as strangerUtils from './strangerUtils.js';
 
 const socket = io("/");
 // resgistrando o socket
@@ -40,6 +41,29 @@ personalCodeVideoButton.addEventListener('click', () => {
     const callType = constants.callType.VIDEO_PERSONAL_CODE;
 
     webRTCHandler.sendPreOffer(callType, calledPersonalCode);
+});
+
+// pegando e escutando evento do botão de chamada de chat para estranhos
+const strangerChatButton = document.getElementById('stranger_chat_button');
+strangerChatButton.addEventListener("click", () => {
+    // logic
+    strangerUtils.getStrangerSocketIdAndConnect(constants.callType.CHAT_STRANGER);
+});
+
+// pegando e escutando evento do botão de chamada de video para estranhos
+const strangerVideoButton = document.getElementById('stranger_video_button');
+strangerVideoButton.addEventListener('click', () => {
+    // logic
+    strangerUtils.getStrangerSocketIdAndConnect(constants.callType.VIDEO_STRANGER);
+});
+
+// pegando e registrando for allow
+const checkbox = document.getElementById('allow_strangers_checkbox');
+checkbox.addEventListener('click', () => {
+    const checkboxState = store.getState().allowConnectionFromStrangers;
+    ui.updateStrangerCheckbox(!checkboxState);
+    store.setAllowConnectionsFromStrangers(!checkboxState);
+    strangerUtils.changeStrangerConnectionStatus(!checkboxState);
 });
 
 // escutando eventos de botões de vídeo

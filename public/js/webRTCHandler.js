@@ -90,7 +90,7 @@ const createPeerConnection = () => {
 
     // add our stream to peer connection
 
-    if (connectedUserDetails.callType === constants.callType.VIDEO_PERSONAL_CODE) {
+    if (connectedUserDetails.callType === constants.callType.VIDEO_PERSONAL_CODE || connectedUserDetails.callType === constants.callType.VIDEO_STRANGER) {
         const localStream = store.getState().localStream;
 
         for (const track of localStream.getTracks()) {
@@ -121,6 +121,15 @@ export const sendPreOffer = (callType, calledPersonalCode) => {
         store.setCallState(constants.callState.CALL_UNAVAILABLE);
         wss.sendPreOffer(data);
     }
+
+    if (callType === constants.callType.CHAT_STRANGER || callType === constants.callType.VIDEO_STRANGER) {
+        const data = {
+            callType,
+            calledPersonalCode
+        };
+        store.setCallState(constants.callState.CALL_UNAVAILABLE);
+        wss.sendPreOffer(data );
+    }
 };
 
 export const handlePreOffer = (data) => {
@@ -144,8 +153,15 @@ export const handlePreOffer = (data) => {
         console.log('Showing call dialog');
         ui.showIncomingDialog(callType, acceptCallHandler, rejectCallHandler);
     }
+
+    if (callType === constants.callType.CHAT_STRANGER || callType === constants.callType.VIDEO_STRANGER) {
+        createPeerConnection();
+        sendPreOfferAnswer(constants.preOfferAnswer.CALL_ACCEPTED);
+        ui.showCallElements(connectedUserDetails.callType);
+    }
 };
 
+// ação de aceitar chamada
 const acceptCallHandler = () => {
     console.log("call accepted");
     createPeerConnection();
@@ -153,15 +169,23 @@ const acceptCallHandler = () => {
     ui.showCallElements(connectedUserDetails.callType);
 };
 
+// ação de rejeitar chamada
 const rejectCallHandler = () => {
     console.log("call rejected");
+
+    // enviando resposta
     sendPreOfferAnswer();
     setIncomingCallAvailable();
     sendPreOfferAnswer(constants.preOfferAnswer.CALL_REJECTED);
 };
 
 const callingDialogRejectCallHandler = () => {
-    console.log("rejecting the call");
+    const data = {
+        connectedUserSocketId: connectedUserDetails.socketId
+    };
+    closePeerConnectionAndResetState();
+
+    wss.sendUserHangedUp(data);
 };
 
 const sendPreOfferAnswer = (preOfferAnswer, callerSocketId = null) => {
@@ -354,13 +378,16 @@ const closePeerConnectionAndResetState = () => {
     connectedUserDetails = null;
 };
 
+// verifica se a chamada é possível
 const checkCallPossibility = (callType) => {
     const callState = store.getState().callState;
 
+    // se o status da chamada for possível retorna true
     if (callState === constants.callState.CALL_AVAILABLE) {
         return true;
     }
 
+    // se a call for do tipo video_personal_code ou video_stranger ou chat_available_only_chat
     if (
         callType === constants.callType.VIDEO_PERSONAL_CODE ||
         callType === constants.callType.VIDEO_STRANGER ||
@@ -372,6 +399,7 @@ const checkCallPossibility = (callType) => {
     return false;
 }
 
+// atualiza o status da chamada
 const setIncomingCallAvailable = () => {
     const localStream = store.getState().localStream;
     if (localStream) {
